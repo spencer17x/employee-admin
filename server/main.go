@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/go-pg/pg/v10"
 	"server/controllers"
@@ -17,12 +18,17 @@ func wrapperDB(handler func(*gin.Context, *pg.DB), db *pg.DB) gin.HandlerFunc {
 func main() {
 	db := database.InitDB()
 	r := gin.Default()
+	r.Use(cors.New(cors.Config{
+		AllowAllOrigins: true,
+		AllowMethods:    []string{"GET", "POST", "PATCH", "DELETE"},
+		AllowHeaders:    []string{"Origin", "Content-Length", "Content-Type", "Authorization"},
+	}))
 
-	r.POST("/user/register", wrapperDB(controllers.Register, db))
-	r.POST("/user/login", wrapperDB(controllers.Login, db))
-	r.GET("/user/profile", middlewares.CheckAuthorization, wrapperDB(controllers.GetProfile, db))
-	r.GET("/users", wrapperDB(controllers.GetUsers, db))
-	r.PATCH("/user/profile", middlewares.CheckAuthorization, wrapperDB(controllers.UpdateProfile, db))
+	r.POST("/api/sign-up", wrapperDB(controllers.SignUp, db))
+	r.POST("/api/sign-in", wrapperDB(controllers.SignIn, db))
+	r.GET("/api/user/profile", middlewares.CheckAuthorization, wrapperDB(controllers.GetProfile, db))
+	r.GET("/api/users", wrapperDB(controllers.GetUsers, db))
+	r.PATCH("/api/user/profile", middlewares.CheckAuthorization, wrapperDB(controllers.UpdateProfile, db))
 
 	r.Run()
 }

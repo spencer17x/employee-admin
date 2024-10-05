@@ -8,7 +8,7 @@ import (
 	"server/models"
 )
 
-func Register(c *gin.Context, db *pg.DB) {
+func SignUp(c *gin.Context, db *pg.DB) {
 	var user models.User
 
 	if err := c.ShouldBindJSON(&user); err != nil {
@@ -33,12 +33,10 @@ func Register(c *gin.Context, db *pg.DB) {
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{
-		"user": user,
-	})
+	c.JSON(http.StatusOK, user)
 }
 
-func Login(c *gin.Context, db *pg.DB) {
+func SignIn(c *gin.Context, db *pg.DB) {
 	var loginUser *struct {
 		Account  string `json:"account" binding:"required"`
 		Password string `json:"password" binding:"required"`
@@ -92,9 +90,7 @@ func GetProfile(c *gin.Context, db *pg.DB) {
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{
-		"user": user,
-	})
+	c.JSON(http.StatusOK, user)
 }
 
 func GetUsers(c *gin.Context, db *pg.DB) {
@@ -145,7 +141,5 @@ func UpdateProfile(c *gin.Context, db *pg.DB) {
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{
-		"user": existingUser,
-	})
+	c.JSON(http.StatusOK, existingUser)
 }
