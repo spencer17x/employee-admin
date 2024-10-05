@@ -19,9 +19,9 @@ func main() {
 	db := database.InitDB()
 	r := gin.Default()
 	r.Use(cors.New(cors.Config{
-		AllowAllOrigins: true,
-		AllowMethods:    []string{"GET", "POST", "PATCH", "DELETE"},
-		AllowHeaders:    []string{"Origin", "Content-Length", "Content-Type", "Authorization"},
+		AllowOrigins: []string{"*"},
+		AllowMethods: []string{"GET", "POST", "PATCH", "DELETE"},
+		AllowHeaders: []string{"Origin", "Content-Length", "Content-Type", "Authorization"},
 	}))
 
 	r.POST("/api/sign-up", wrapperDB(controllers.SignUp, db))
